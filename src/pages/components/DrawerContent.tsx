@@ -27,6 +27,14 @@ const DrawerContent: FC = () => {
     console.log("clear 2");
   };
 
+  const onSubmit = () => {
+    console.log("submit");
+  };
+
+  const onReset = () => {
+    console.log("reset");
+  };
+
   return (
     <Stack spacing={6} sx={{ padding: 6, marginTop: 4 }}>
       <TextField
@@ -88,8 +96,12 @@ const DrawerContent: FC = () => {
           direction="row"
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button variant="contained">Submit</Button>
-          <Button variant="contained">Reset</Button>
+          <Button variant="contained" onClick={onSubmit}>
+            Submit
+          </Button>
+          <Button variant="contained" onClick={onReset}>
+            Reset
+          </Button>
         </Stack>
       </Box>
     </Stack>
