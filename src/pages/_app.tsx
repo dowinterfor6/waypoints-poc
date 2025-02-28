@@ -9,5 +9,5 @@ import type { AppProps } from "next/app";
  * Used for globally accessible components, layouts, styles and structures
  */
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component { ...pageProps } />;
+  return <Component {...pageProps} />;
 }
