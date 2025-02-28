@@ -2,6 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import React, { FC } from 'react';
+import { Button } from "@mui/material";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function Home() {
+const Home: FC = () => {
   return (
     <>
       <Head>
@@ -22,6 +24,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Button variant="contained">TEST</Button>
       <div
         className={ `${styles.page} ${geistSans.variable} ${geistMono.variable}` }
       >
@@ -114,4 +117,6 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export default Home;
