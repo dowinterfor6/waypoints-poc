@@ -204,7 +204,7 @@ describe("api", () => {
       test("get /route/:token returns an error message on rejected error state", async () => {
         spyOn(global, "fetch").mockImplementationOnce(() => Promise.reject({}));
 
-        const res = await getRouteToken("asdf", "asdf2");
+        const res = await getRoutePathByToken("asdf");
 
         expect(res).toEqual({
           status: "ERROR",

@@ -79,7 +79,12 @@ export const getRoutePathByToken = async (
     const json = await res.json();
 
     if ("status" in json && json.status === "in progress") {
-      // TODO: Implement sleep?
+      /**
+       * In a production environment I'd implement some sort of
+       * sleep/wait so as to reduce server load by constantly pinging
+       * while "in progress", but for this I'll retry on "in progress"
+       * immediately
+       */
       return await getRoutePathByToken(token);
     }
 

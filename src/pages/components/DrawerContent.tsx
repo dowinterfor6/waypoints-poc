@@ -1,71 +1,107 @@
+import { getRoutePathByToken, getRouteToken } from "@/utils/api";
 import { Clear } from "@mui/icons-material";
 import {
+  Autocomplete,
   Box,
   Button,
-  IconButton,
-  InputAdornment,
-  Paper,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 
 const DrawerContent: FC = () => {
-  const [totals, setTotals] = useState<{
+  const INITIAL_ROUTE_DATA = { distance: null, time: null, path: null };
+
+  const [routeData, setRouteData] = useState<{
     distance: number | null;
     time: number | null;
-  }>({ distance: null, time: null });
+    path: Array<[string, string]> | null;
+  }>(INITIAL_ROUTE_DATA);
 
-  const [errors, setErrors] = useState<Array<string>>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [startingLocation, setStartingLocation] = useState<string>("");
+  const [dropoffLocation, setDropoffLocation] = useState<string>("");
 
-  const onClearStartingLocation = () => {
-    console.log("clear");
+  const onInputChange = (
+    newValue: string,
+    setStateAction: Dispatch<SetStateAction<string>>
+  ): void => {
+    setStateAction(newValue);
   };
 
-  const onClearDropoffLocation = () => {
-    console.log("clear 2");
+  const onSubmit = async (): Promise<void> => {
+    setRouteData(INITIAL_ROUTE_DATA);
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      // In a real app, add some sort of validation to the locations to ensure
+      // it's somewhat valid before spending an API call
+      const routeTokenResponse = await getRouteToken(
+        startingLocation,
+        dropoffLocation
+      );
+
+      if (routeTokenResponse.status === "ERROR") {
+        throw new Error("Failed to get route token from location");
+      }
+
+      const routeToken = routeTokenResponse.token;
+
+      const routePathResponse = await getRoutePathByToken(routeToken);
+
+      if (routePathResponse.status === "ERROR") {
+        throw new Error(routePathResponse.errorMessage);
+      }
+
+      const {
+        path,
+        totalDistance: distance,
+        totalTime: time,
+      } = routePathResponse;
+
+      setRouteData({ path, distance, time });
+    } catch (error) {
+      if (typeof error === "string") {
+        setError(error);
+      } else {
+        setError("Failed to fetch route data");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const onSubmit = () => {
-    console.log("submit");
-  };
-
-  const onReset = () => {
-    console.log("reset");
+  const onReset = (): void => {
+    setError(null);
+    setStartingLocation("");
+    setDropoffLocation("");
+    setRouteData(INITIAL_ROUTE_DATA);
   };
 
   return (
     <Stack spacing={6} sx={{ padding: 6, marginTop: 4 }}>
-      <TextField
-        label="Starting Location"
-        variant="outlined"
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={onClearStartingLocation}>
-                  <Clear />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
+      <Autocomplete
+        freeSolo
+        options={[]}
+        clearIcon={<Clear />}
+        inputValue={startingLocation}
+        onInputChange={(_, value) => onInputChange(value, setStartingLocation)}
+        renderInput={(params) => (
+          <TextField {...params} label="Starting Location" variant="outlined" />
+        )}
       />
-      <TextField
-        label="Drop-off Point"
-        variant="outlined"
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={onClearDropoffLocation}>
-                  <Clear />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
+      <Autocomplete
+        freeSolo
+        options={[]}
+        clearIcon={<Clear />}
+        inputValue={dropoffLocation}
+        onInputChange={(_, value) => onInputChange(value, setDropoffLocation)}
+        renderInput={(params) => (
+          <TextField {...params} label="Drop-off Point" variant="outlined" />
+        )}
       />
       <Box
         component="section"
@@ -78,16 +114,20 @@ const DrawerContent: FC = () => {
       >
         <Stack>
           <Stack>
-            {Number.isFinite(totals.distance) &&
-              Number.isFinite(totals.time) && (
+            {Number.isFinite(routeData.distance) &&
+              Number.isFinite(routeData.time) && (
                 <>
-                  <Typography variant="body1">Total Distance: {}</Typography>
-                  <Typography variant="body1">Total Time: {}</Typography>
+                  <Typography variant="body1">
+                    Total Distance: {routeData.distance}
+                  </Typography>
+                  <Typography variant="body1">
+                    Total Time: {routeData.time}
+                  </Typography>
                 </>
               )}
           </Stack>
           <Box>
-            {!!errors.length && <Typography variant="body1">Errors</Typography>}
+            {error !== null && <Typography variant="body1">{error}</Typography>}
           </Box>
         </Stack>
       </Box>
@@ -96,10 +136,12 @@ const DrawerContent: FC = () => {
           direction="row"
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Button variant="contained" onClick={onSubmit}>
+          {/* The UX on this is subjective, but for a simple experience disallowed
+          actions while loading will just be disabled */}
+          <Button variant="contained" onClick={onSubmit} loading={isLoading}>
             Submit
           </Button>
-          <Button variant="contained" onClick={onReset}>
+          <Button variant="contained" onClick={onReset} disabled={isLoading}>
             Reset
           </Button>
         </Stack>
