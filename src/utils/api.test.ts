@@ -35,22 +35,9 @@ describe("api", () => {
         spyOn(global, "fetch").mockImplementationOnce(() =>
           Promise.resolve({
             ok: false,
-            url: "https://sg-mock-api.lalamove.com/route",
+            url: "https://mock-api.com/route",
             status: 500,
             statusText: "Internal Server Error",
-            headers: {
-              date: "Fri, 28 Feb 2025 09:40:24 GMT",
-              "content-type": "text/plain; charset=utf-8",
-              "content-length": "21",
-              connection: "keep-alive",
-              "access-control-allow-origin": "*",
-              "access-control-allow-methods": "GET,HEAD,PUT,POST,DELETE",
-              "waf-ray-id": "f93077ddea5932ec987f45fb6f383242",
-              "x-kong-upstream-latency": "1",
-              "x-kong-proxy-latency": "0",
-              server: "WAF-Gateway/0.37",
-              "x-apisix-upstream-status": "500",
-            },
             redirected: false,
             bodyUsed: false,
           } as unknown as Response)
