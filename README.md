@@ -50,8 +50,10 @@ bun --bun run build
 
 ## Deployment
 
-Since this creates a static export (SPA, not SSR), and Nextjs doesn't do relative imports by default, go through all the imports to ensure they are relative imports.
+Since this creates a static export (SPA, not SSR), and Nextjs doesn't do relative imports by default, in order to view the production build by local file browser, go through all the imports to ensure they are relative imports.
 E.g. anything that's `"/_next/etc.js'"` should be `"./_next/etc.js"`.
+
+Otherwise, set up custom deployment via github actions like [this guide](https://www.freecodecamp.org/news/how-to-deploy-next-js-app-to-github-pages/) to get automatic building and deployment to the correct custom domain.
 
 ## Misc
 
