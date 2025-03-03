@@ -1,14 +1,7 @@
 import { getRoutePathByToken, getRouteToken } from "@/utils/api";
-import { Clear } from "@mui/icons-material";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import React, { FC, useState } from "react";
+import { LocationInput } from "./LocationInputs";
 
 const DrawerContent: FC = () => {
   const INITIAL_ROUTE_DATA = { distance: null, time: null, path: null };
@@ -23,13 +16,6 @@ const DrawerContent: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [startingLocation, setStartingLocation] = useState<string>("");
   const [dropoffLocation, setDropoffLocation] = useState<string>("");
-
-  const onInputChange = (
-    newValue: string,
-    setStateAction: Dispatch<SetStateAction<string>>
-  ): void => {
-    setStateAction(newValue);
-  };
 
   const onSubmit = async (): Promise<void> => {
     setRouteData(INITIAL_ROUTE_DATA);
@@ -83,25 +69,15 @@ const DrawerContent: FC = () => {
 
   return (
     <Stack spacing={6} sx={{ padding: 6, marginTop: 4 }}>
-      <Autocomplete
-        freeSolo
-        options={[]}
-        clearIcon={<Clear />}
-        inputValue={startingLocation}
-        onInputChange={(_, value) => onInputChange(value, setStartingLocation)}
-        renderInput={(params) => (
-          <TextField {...params} label="Starting Location" variant="outlined" />
-        )}
+      <LocationInput
+        label="Starting Location"
+        value={startingLocation}
+        setValue={setStartingLocation}
       />
-      <Autocomplete
-        freeSolo
-        options={[]}
-        clearIcon={<Clear />}
-        inputValue={dropoffLocation}
-        onInputChange={(_, value) => onInputChange(value, setDropoffLocation)}
-        renderInput={(params) => (
-          <TextField {...params} label="Drop-off Point" variant="outlined" />
-        )}
+      <LocationInput
+        label="Drop-off Location"
+        value={dropoffLocation}
+        setValue={setDropoffLocation}
       />
       <Box
         component="section"
