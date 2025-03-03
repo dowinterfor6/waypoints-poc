@@ -103,7 +103,11 @@ const DrawerContent: FC = () => {
               )}
           </Stack>
           <Box>
-            {error !== null && <Typography variant="body1">{error}</Typography>}
+            {error !== null && (
+              <Typography variant="body1" sx={{ color: "red" }}>
+                {error}
+              </Typography>
+            )}
           </Box>
         </Stack>
       </Box>
