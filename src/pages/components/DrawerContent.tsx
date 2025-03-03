@@ -6,9 +6,15 @@ import { Coordinate } from "@/types";
 
 type Props = {
   setWaypoints: Dispatch<SetStateAction<Array<Coordinate> | null>>;
+  isMobileViewport: boolean;
+  setIsMobileDrawerOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const DrawerContent: FC<Props> = ({ setWaypoints }) => {
+const DrawerContent: FC<Props> = ({
+  setWaypoints,
+  isMobileViewport,
+  setIsMobileDrawerOpen,
+}) => {
   const INITIAL_ROUTE_DATA = { distance: null, time: null };
 
   const [routeData, setRouteData] = useState<{
@@ -35,7 +41,7 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
       );
 
       if (routeTokenResponse.status === "ERROR") {
-        throw new Error("Failed to get route token from location");
+        throw new Error(routeTokenResponse.errorMessage);
       }
 
       const routeToken = routeTokenResponse.token;
@@ -54,10 +60,18 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
 
       setRouteData({ distance, time });
       setWaypoints(path);
+
+      if (isMobileViewport) {
+        setIsMobileDrawerOpen(false);
+      }
     } catch (error) {
-      console.log("error: ", typeof error);
-      if (typeof error === "string") {
-        setError(error);
+      if (
+        !!error &&
+        typeof error === "object" &&
+        "message" in error &&
+        typeof error.message === "string"
+      ) {
+        setError(error.message);
       } else {
         setError("Failed to fetch route data");
       }
@@ -75,8 +89,17 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
     setWaypoints(null);
   };
 
+  const typographyVariant = isMobileViewport ? "body2" : "body1";
+
   return (
-    <Stack spacing={6} sx={{ padding: 6, marginTop: 4 }}>
+    <Stack
+      spacing={6}
+      sx={{
+        padding: isMobileViewport ? "24px" : "72px 32px 24px",
+        marginTop: isMobileViewport ? "50px" : "32px",
+        height: "100%",
+      }}
+    >
       <LocationInput
         label="Starting Location"
         value={startingLocation}
@@ -90,10 +113,10 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
       <Box
         component="section"
         sx={{
-          height: 100,
           justifyContent: "flex-end",
           display: "flex",
           flexDirection: "column",
+          height: "200px",
         }}
       >
         <Stack>
@@ -101,10 +124,10 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
             {Number.isFinite(routeData.distance) &&
               Number.isFinite(routeData.time) && (
                 <>
-                  <Typography variant="body1">
+                  <Typography variant={typographyVariant}>
                     Total Distance: {routeData.distance}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant={typographyVariant}>
                     Total Time: {routeData.time}
                   </Typography>
                 </>
@@ -112,7 +135,7 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
           </Stack>
           <Box>
             {error !== null && (
-              <Typography variant="body1" sx={{ color: "red" }}>
+              <Typography variant={typographyVariant} sx={{ color: "red" }}>
                 {error}
               </Typography>
             )}
@@ -133,6 +156,14 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
             Reset
           </Button>
         </Stack>
+      </Box>
+      <Box
+        component="div"
+        sx={{ display: "flex", alignItems: "flex-end", height: "100%" }}
+      >
+        <Typography variant="caption">
+          Powered by Google, ©2025 Google
+        </Typography>
       </Box>
     </Stack>
   );

@@ -62,11 +62,15 @@ const MainContent: FC = () => {
     loadMapsLibraries(loader);
   }, []);
 
+  const additionalStyleProps = isMobileViewport
+    ? {}
+    : { display: "grid", gridTemplateColumns: "300px 1fr" };
+
   return (
     <Box
       component="main"
       className="main-content-container"
-      sx={{ height: "100%" }}
+      sx={{ height: "100%", ...additionalStyleProps }}
     >
       {isMobileViewport && (
         <IconButton
@@ -85,32 +89,23 @@ const MainContent: FC = () => {
         </IconButton>
       )}
       <Drawer
-        open={isMobileDrawerOpen}
+        open={!isMobileViewport || isMobileDrawerOpen}
         onClose={() => setIsMobileDrawerOpen(false)}
         sx={{
           width: "80%",
           maxWidth: 300,
-          display: { xs: "block", sm: "none" },
         }}
         slotProps={{
           paper: { sx: { width: "80%", maxWidth: 300 } },
           root: { keepMounted: true },
         }}
-        variant={"temporary"}
+        variant={isMobileViewport ? "temporary" : "persistent"}
       >
-        <DrawerContent setWaypoints={setWaypoints} />
-      </Drawer>
-      <Drawer
-        open
-        sx={{
-          width: "80%",
-          maxWidth: 300,
-          display: { xs: "none", sm: "block" },
-        }}
-        slotProps={{ paper: { sx: { width: "80%", maxWidth: 300 } } }}
-        variant={"persistent"}
-      >
-        <DrawerContent setWaypoints={setWaypoints} />
+        <DrawerContent
+          setWaypoints={setWaypoints}
+          isMobileViewport={isMobileViewport}
+          setIsMobileDrawerOpen={setIsMobileDrawerOpen}
+        />
       </Drawer>
       <Box
         component="section"

@@ -32,7 +32,7 @@ const setRoutePolyline = async (
       path: formattedDecodedPolyline,
       geodesic: true,
       strokeColor: "#4381dd",
-      strokeOpacity: 0.7,
+      strokeOpacity: 0.8,
       strokeWeight: 6,
     });
 
@@ -56,7 +56,6 @@ const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
       });
 
       if (waypoints && waypoints.length > 0) {
-        console.log("waypoints: ", waypoints);
         const markerBounds = new google.maps.LatLngBounds();
 
         waypoints.forEach(([lat, lng], idx) => {

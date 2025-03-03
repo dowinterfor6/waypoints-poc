@@ -25,13 +25,13 @@ export const getRouteToken = async (
     });
 
     if (!res.ok) {
-      throw new Error(`Response status: ${res.status}`);
+      throw new Error("Server encountered an error while getting route token");
     }
 
     const json = await res.json();
 
     if (!("token" in json) || typeof json.token !== "string") {
-      throw new Error("Response shape not expected, token not found");
+      throw new Error("Response shape not expected, route token not found");
     }
 
     const token = json.token;
@@ -43,8 +43,13 @@ export const getRouteToken = async (
   } catch (error) {
     let errorMessage = `Failed to fetch route token for origin: ${origin}, and destination: ${destination}`;
 
-    if (typeof error === "string") {
-      errorMessage = error;
+    if (
+      !!error &&
+      typeof error === "object" &&
+      "message" in error &&
+      typeof error.message === "string"
+    ) {
+      errorMessage = error.message;
     }
 
     return {
@@ -75,7 +80,9 @@ export const getRoutePathByToken = async (
     const res = await fetch(apiUrl);
 
     if (!res.ok) {
-      throw new Error(`Response status: ${res.status}`);
+      throw new Error(
+        "Server encountered an error while getting route path by token"
+      );
     }
 
     const json = await res.json();
@@ -98,9 +105,14 @@ export const getRoutePathByToken = async (
       !("total_time" in json) ||
       typeof json.total_time !== "number"
     ) {
-      throw new Error(
-        "Response shape not expected, path and/or total_distance and/or total_time not found"
-      );
+      let error =
+        "Response shape not expected, path and/or total_distance and/or total_time not found";
+
+      if ("error" in json && typeof json.error === "string") {
+        error = json.error;
+      }
+
+      throw new Error(error);
     }
 
     const { path, total_distance: totalDistance, total_time: totalTime } = json;
@@ -114,8 +126,13 @@ export const getRoutePathByToken = async (
   } catch (error) {
     let errorMessage = "Failed to fetch route";
 
-    if (typeof error === "string") {
-      errorMessage = error;
+    if (
+      !!error &&
+      typeof error === "object" &&
+      "message" in error &&
+      typeof error.message === "string"
+    ) {
+      errorMessage = error.message;
     }
 
     return {
