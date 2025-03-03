@@ -35,9 +35,9 @@ jobs:
           static_site_generator: next
 
       - name: Build with Next.js 🏗️
-        run: bun --bun run build
         env:
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        run: bun --bun run build
 
       - name: Upload artifact 📡
         uses: actions/upload-pages-artifact@v3
