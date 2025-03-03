@@ -10,6 +10,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Install Bun following the official [instructions](https://bun.sh/docs/installation). If already installed, skip this step.
 
+## Obtain Google Maps API Key
+
+Obtain Google Maps Platform API Key.
+
+Create a `.env` file at root, and add entry for `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=[API_KEY_HERE]`
+
 ## Getting Started
 
 Install all necessary dependencies:
@@ -41,6 +47,11 @@ To create the production build:
 ```bash
 bun --bun run build
 ```
+
+## Deployment
+
+Since this creates a static export (SPA, not SSR), and Nextjs doesn't do relative imports by default, go through all the imports to ensure they are relative imports.
+E.g. anything that's `"/_next/etc.js'"` should be `"./_next/etc.js"`.
 
 ## Misc
 
