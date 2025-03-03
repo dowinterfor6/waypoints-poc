@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from "react";
-import "@/styles/main-content.css";
 import {
   Box,
   CircularProgress,

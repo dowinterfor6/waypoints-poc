@@ -1,5 +1,4 @@
 import React, { FC, useLayoutEffect, useRef } from "react";
-import "@/styles/map-container.css";
 import { Coordinate } from "@/types";
 import { uniqueId } from "lodash";
 import { getRoutePolyline } from "@/utils/mapsApi";
@@ -87,7 +86,13 @@ const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
     markerApi.PinElement,
   ]);
 
-  return <div className="map-container" ref={mapContainerRef} />;
+  return (
+    <div
+      className="map-container"
+      ref={mapContainerRef}
+      style={{ height: "100%", width: "100%" }}
+    />
+  );
 };
 
 export { MapContainer };
