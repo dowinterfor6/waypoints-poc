@@ -41,3 +41,9 @@ To create the production build:
 ```bash
 bun --bun run build
 ```
+
+## Misc
+
+Use the [Google Cloud Console](https://console.cloud.google.com/google/maps-apis/quotas?project=waypoints-maps-api&api=maps-backend.googleapis.com) to manage quotas for the API
+
+Refer to the [pricing list](https://developers.google.com/maps/billing-and-pricing/pricing) for pricing
