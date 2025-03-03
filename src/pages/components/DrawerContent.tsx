@@ -55,6 +55,7 @@ const DrawerContent: FC<Props> = ({ setWaypoints }) => {
       setRouteData({ distance, time });
       setWaypoints(path);
     } catch (error) {
+      console.log("error: ", typeof error);
       if (typeof error === "string") {
         setError(error);
       } else {

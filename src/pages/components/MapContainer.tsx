@@ -32,8 +32,8 @@ const setRoutePolyline = async (
       path: formattedDecodedPolyline,
       geodesic: true,
       strokeColor: "#4381dd",
-      strokeOpacity: 0.8,
-      strokeWeight: 4,
+      strokeOpacity: 0.7,
+      strokeWeight: 6,
     });
 
     routePolyline.setMap(map);

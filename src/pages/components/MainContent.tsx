@@ -3,17 +3,22 @@ import "@/styles/main-content.css";
 import {
   Box,
   CircularProgress,
+  Drawer,
   IconButton,
-  SwipeableDrawer,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { MenuOpenRounded, MenuRounded } from "@mui/icons-material";
+import { MenuOpenOutlined, MenuOutlined } from "@mui/icons-material";
 import { DrawerContent } from "./DrawerContent";
 import { Loader } from "@googlemaps/js-api-loader";
 import { MapContainer } from "./MapContainer";
 import { Coordinate } from "@/types";
 
 const MainContent: FC = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const theme = useTheme();
+  const isMobileViewport = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(true);
   const [waypoints, setWaypoints] = useState<Array<Coordinate> | null>(null);
 
   const [googleMapsLibrary, setGoogleMapsLibrary] =
@@ -63,27 +68,50 @@ const MainContent: FC = () => {
       className="main-content-container"
       sx={{ height: "100%" }}
     >
-      <IconButton
-        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+      {isMobileViewport && (
+        <IconButton
+          onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
+          sx={{
+            zIndex: 1300,
+            position: "absolute",
+            top: 5,
+            left: 5,
+            backgroundColor: "#FFFFFFDD",
+          }}
+          size="large"
+          disableRipple
+        >
+          {isMobileDrawerOpen ? <MenuOpenOutlined /> : <MenuOutlined />}
+        </IconButton>
+      )}
+      <Drawer
+        open={isMobileDrawerOpen}
+        onClose={() => setIsMobileDrawerOpen(false)}
         sx={{
-          zIndex: 1300,
-          position: "absolute",
-          top: 5,
-          left: 5,
+          width: "80%",
+          maxWidth: 300,
+          display: { xs: "block", sm: "none" },
         }}
-        size="large"
-      >
-        {isDrawerOpen ? <MenuOpenRounded /> : <MenuRounded />}
-      </IconButton>
-      <SwipeableDrawer
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        onOpen={() => setIsDrawerOpen(true)}
-        className="drawer"
-        slotProps={{ paper: { sx: { width: "80%", maxWidth: 300 } } }}
+        slotProps={{
+          paper: { sx: { width: "80%", maxWidth: 300 } },
+          root: { keepMounted: true },
+        }}
+        variant={"temporary"}
       >
         <DrawerContent setWaypoints={setWaypoints} />
-      </SwipeableDrawer>
+      </Drawer>
+      <Drawer
+        open
+        sx={{
+          width: "80%",
+          maxWidth: 300,
+          display: { xs: "none", sm: "block" },
+        }}
+        slotProps={{ paper: { sx: { width: "80%", maxWidth: 300 } } }}
+        variant={"persistent"}
+      >
+        <DrawerContent setWaypoints={setWaypoints} />
+      </Drawer>
       <Box
         component="section"
         sx={{
