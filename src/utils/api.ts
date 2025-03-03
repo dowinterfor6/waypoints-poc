@@ -1,3 +1,5 @@
+import { Coordinate } from "@/types";
+
 const MOCK_API_BASE_URL = "https://sg-mock-api.lalamove.com";
 
 export type PostRouteResponse =
@@ -55,7 +57,7 @@ export const getRouteToken = async (
 export type GetRouteResponse =
   | {
       status: "SUCCESS";
-      path: Array<[string, string]>;
+      path: Array<Coordinate>;
       totalDistance: number;
       totalTime: number;
     }

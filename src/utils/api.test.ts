@@ -1,5 +1,6 @@
 import { describe, expect, spyOn, test } from "bun:test";
 import { getRoutePathByToken, getRouteToken } from "./api";
+import { Coordinate } from "@/types";
 
 describe("api", () => {
   describe("getRouteToken", () => {
@@ -87,7 +88,7 @@ describe("api", () => {
         ["22.372081", "114.107877"],
         ["22.326442", "114.167811"],
         ["22.284419", "114.159510"],
-      ] as Array<[string, string]>,
+      ] as Array<Coordinate>,
       total_distance: 20000,
       total_time: 1800,
     };

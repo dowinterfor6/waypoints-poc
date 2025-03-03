@@ -1,15 +1,19 @@
 import { getRoutePathByToken, getRouteToken } from "@/utils/api";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { LocationInput } from "./LocationInputs";
+import { Coordinate } from "@/types";
 
-const DrawerContent: FC = () => {
-  const INITIAL_ROUTE_DATA = { distance: null, time: null, path: null };
+type Props = {
+  setWaypoints: Dispatch<SetStateAction<Array<Coordinate> | null>>;
+};
+
+const DrawerContent: FC<Props> = ({ setWaypoints }) => {
+  const INITIAL_ROUTE_DATA = { distance: null, time: null };
 
   const [routeData, setRouteData] = useState<{
     distance: number | null;
     time: number | null;
-    path: Array<[string, string]> | null;
   }>(INITIAL_ROUTE_DATA);
 
   const [error, setError] = useState<string | null>(null);
@@ -48,13 +52,15 @@ const DrawerContent: FC = () => {
         totalTime: time,
       } = routePathResponse;
 
-      setRouteData({ path, distance, time });
+      setRouteData({ distance, time });
+      setWaypoints(path);
     } catch (error) {
       if (typeof error === "string") {
         setError(error);
       } else {
         setError("Failed to fetch route data");
       }
+      setWaypoints(null);
     } finally {
       setIsLoading(false);
     }
@@ -65,6 +71,7 @@ const DrawerContent: FC = () => {
     setStartingLocation("");
     setDropoffLocation("");
     setRouteData(INITIAL_ROUTE_DATA);
+    setWaypoints(null);
   };
 
   return (

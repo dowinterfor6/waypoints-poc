@@ -1,15 +1,26 @@
 import React, { FC, useEffect, useState } from "react";
 import "@/styles/main-content.css";
-import { Box, IconButton, SwipeableDrawer } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  SwipeableDrawer,
+} from "@mui/material";
 import { MenuOpenRounded, MenuRounded } from "@mui/icons-material";
 import { DrawerContent } from "./DrawerContent";
 import { Loader } from "@googlemaps/js-api-loader";
+import { MapContainer } from "./MapContainer";
+import { Coordinate } from "@/types";
 
 const MainContent: FC = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [waypoints, setWaypoints] = useState<Array<Coordinate> | null>(null);
+
   const [googleMapsLibrary, setGoogleMapsLibrary] =
     useState<google.maps.MapsLibrary | null>(null);
   const [googleMarkerLibrary, setGoogleMarkerLibrary] =
     useState<google.maps.MarkerLibrary | null>(null);
+
   const [isGoogleMapsInitialized, setIsGoogleMapsInitialized] = useState(false);
 
   const loadMapsLibraries = async (loader: Loader) => {
@@ -26,7 +37,7 @@ const MainContent: FC = () => {
         })(),
       ]);
     } catch {
-      console.error("Failed to initialize maps or marker libraries");
+      console.error("Failed to initialize required google maps libraries");
     } finally {
       setIsGoogleMapsInitialized(true);
     }
@@ -46,10 +57,12 @@ const MainContent: FC = () => {
     loadMapsLibraries(loader);
   }, []);
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(true);
-
   return (
-    <Box component="main" className="main-content-container">
+    <Box
+      component="main"
+      className="main-content-container"
+      sx={{ height: "100%" }}
+    >
       <IconButton
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
         sx={{
@@ -69,11 +82,27 @@ const MainContent: FC = () => {
         className="drawer"
         slotProps={{ paper: { sx: { width: "80%", maxWidth: 300 } } }}
       >
-        <DrawerContent />
+        <DrawerContent setWaypoints={setWaypoints} />
       </SwipeableDrawer>
-      <section className="map-container">
-        {!isGoogleMapsInitialized ? "LOADING" : "MAPS API LOADED"}
-      </section>
+      <Box
+        component="section"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        {isGoogleMapsInitialized && googleMapsLibrary && googleMarkerLibrary ? (
+          <MapContainer
+            mapsApi={googleMapsLibrary}
+            markerApi={googleMarkerLibrary}
+            waypoints={waypoints}
+          />
+        ) : (
+          <CircularProgress size="50px" />
+        )}
+      </Box>
     </Box>
   );
 };
