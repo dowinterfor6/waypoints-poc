@@ -8,9 +8,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { MenuOpenOutlined, MenuOutlined } from "@mui/icons-material";
-import { DrawerContent } from "./DrawerContent";
+import DrawerContent from "./DrawerContent";
 import { Loader } from "@googlemaps/js-api-loader";
-import { MapContainer } from "./MapContainer";
+import MapContainer from "./MapContainer";
 import { Coordinate } from "@/types";
 
 const MainContent: FC = () => {
@@ -24,6 +24,9 @@ const MainContent: FC = () => {
     useState<google.maps.MapsLibrary | null>(null);
   const [googleMarkerLibrary, setGoogleMarkerLibrary] =
     useState<google.maps.MarkerLibrary | null>(null);
+  const [googleLibrary, setGoogleLibrary] = useState<typeof google | null>(
+    null
+  );
 
   const [isGoogleMapsInitialized, setIsGoogleMapsInitialized] = useState(false);
 
@@ -40,6 +43,8 @@ const MainContent: FC = () => {
           setGoogleMarkerLibrary(marker);
         })(),
       ]);
+
+      setGoogleLibrary(window.google);
     } catch {
       console.error("Failed to initialize required google maps libraries");
     } finally {
@@ -115,8 +120,12 @@ const MainContent: FC = () => {
           height: "100%",
         }}
       >
-        {isGoogleMapsInitialized && googleMapsLibrary && googleMarkerLibrary ? (
+        {isGoogleMapsInitialized &&
+        googleLibrary &&
+        googleMapsLibrary &&
+        googleMarkerLibrary ? (
           <MapContainer
+            googleLibrary={googleLibrary}
             mapsApi={googleMapsLibrary}
             markerApi={googleMarkerLibrary}
             waypoints={waypoints}
@@ -129,4 +138,4 @@ const MainContent: FC = () => {
   );
 };
 
-export { MainContent };
+export default MainContent;

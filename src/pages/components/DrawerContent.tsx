@@ -1,7 +1,7 @@
 import { getRoutePathByToken, getRouteToken } from "@/utils/api";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { LocationInput } from "./LocationInputs";
+import LocationInput from "./LocationInputs";
 import { Coordinate } from "@/types";
 
 type Props = {
@@ -169,4 +169,4 @@ const DrawerContent: FC<Props> = ({
   );
 };
 
-export { DrawerContent };
+export default DrawerContent;

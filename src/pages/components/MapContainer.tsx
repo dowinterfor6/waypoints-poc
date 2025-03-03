@@ -5,12 +5,14 @@ import { getRoutePolyline } from "@/utils/mapsApi";
 import polyline from "@mapbox/polyline";
 
 type Props = {
+  googleLibrary: typeof google;
   mapsApi: google.maps.MapsLibrary;
   markerApi: google.maps.MarkerLibrary;
   waypoints: Array<Coordinate> | null;
 };
 
 const setRoutePolyline = async (
+  googleLibrary: typeof google,
   waypoints: Array<Coordinate>,
   map: google.maps.Map
 ) => {
@@ -24,10 +26,10 @@ const setRoutePolyline = async (
     const decodedPolyline = polyline.decode(routePolylineResponse);
 
     const formattedDecodedPolyline = decodedPolyline.map(
-      ([lat, lng]) => new google.maps.LatLng(Number(lat), Number(lng))
+      ([lat, lng]) => new googleLibrary.maps.LatLng(Number(lat), Number(lng))
     );
 
-    const routePolyline = new google.maps.Polyline({
+    const routePolyline = new googleLibrary.maps.Polyline({
       path: formattedDecodedPolyline,
       geodesic: true,
       strokeColor: "#4381dd",
@@ -41,7 +43,12 @@ const setRoutePolyline = async (
   }
 };
 
-const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
+const MapContainer: FC<Props> = ({
+  googleLibrary,
+  mapsApi,
+  markerApi,
+  waypoints,
+}) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -55,7 +62,7 @@ const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
       });
 
       if (waypoints && waypoints.length > 0) {
-        const markerBounds = new google.maps.LatLngBounds();
+        const markerBounds = new googleLibrary.maps.LatLngBounds();
 
         waypoints.forEach(([lat, lng], idx) => {
           const pinTextGlyph = new markerApi.PinElement({
@@ -63,7 +70,10 @@ const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
             glyphColor: "white",
           });
 
-          const position = new google.maps.LatLng(Number(lat), Number(lng));
+          const position = new googleLibrary.maps.LatLng(
+            Number(lat),
+            Number(lng)
+          );
 
           new markerApi.AdvancedMarkerElement({
             map,
@@ -76,10 +86,11 @@ const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
 
         map.fitBounds(markerBounds);
 
-        setRoutePolyline(waypoints, map);
+        setRoutePolyline(googleLibrary, waypoints, map);
       }
     }
   }, [
+    googleLibrary,
     waypoints,
     mapsApi.Map,
     markerApi.AdvancedMarkerElement,
@@ -95,4 +106,4 @@ const MapContainer: FC<Props> = ({ mapsApi, markerApi, waypoints }) => {
   );
 };
 
-export { MapContainer };
+export default MapContainer;

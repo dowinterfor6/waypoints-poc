@@ -49,4 +49,4 @@ const LocationInput: FC<Props> = ({ label, value, setValue }) => {
   );
 };
 
-export { LocationInput };
+export default LocationInput;

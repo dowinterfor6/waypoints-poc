@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React, { FC } from "react";
-import { MainContent } from "./components/MainContent";
+import MainContent from "./components/MainContent";
 
 const Home: FC = () => {
   return (
