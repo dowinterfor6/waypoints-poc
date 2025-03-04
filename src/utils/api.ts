@@ -2,13 +2,18 @@ import { Coordinate } from "@/types";
 
 const MOCK_API_BASE_URL = "https://sg-mock-api.lalamove.com";
 
+export enum API_RESPONSE_STATUS {
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+}
+
 export type PostRouteResponse =
   | {
-      status: "SUCCESS";
+      status: API_RESPONSE_STATUS.SUCCESS;
       token: string;
     }
   | {
-      status: "ERROR";
+      status: API_RESPONSE_STATUS.ERROR;
       errorMessage: string;
     };
 
@@ -37,7 +42,7 @@ export const getRouteToken = async (
     const token = json.token;
 
     return {
-      status: "SUCCESS",
+      status: API_RESPONSE_STATUS.SUCCESS,
       token,
     };
   } catch (error) {
@@ -53,7 +58,7 @@ export const getRouteToken = async (
     }
 
     return {
-      status: "ERROR",
+      status: API_RESPONSE_STATUS.ERROR,
       errorMessage,
     };
   }
@@ -61,13 +66,13 @@ export const getRouteToken = async (
 
 export type GetRouteResponse =
   | {
-      status: "SUCCESS";
+      status: API_RESPONSE_STATUS.SUCCESS;
       path: Array<Coordinate>;
       totalDistance: number;
       totalTime: number;
     }
   | {
-      status: "ERROR";
+      status: API_RESPONSE_STATUS.ERROR;
       errorMessage: string;
     };
 
@@ -118,7 +123,7 @@ export const getRoutePathByToken = async (
     const { path, total_distance: totalDistance, total_time: totalTime } = json;
 
     return {
-      status: "SUCCESS",
+      status: API_RESPONSE_STATUS.SUCCESS,
       path,
       totalDistance,
       totalTime,
@@ -136,7 +141,7 @@ export const getRoutePathByToken = async (
     }
 
     return {
-      status: "ERROR",
+      status: API_RESPONSE_STATUS.ERROR,
       errorMessage,
     };
   }

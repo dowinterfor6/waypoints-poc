@@ -1,5 +1,5 @@
 import { describe, expect, spyOn, test } from "bun:test";
-import { getRoutePathByToken, getRouteToken } from "./api";
+import { API_RESPONSE_STATUS, getRoutePathByToken, getRouteToken } from "./api";
 import { Coordinate } from "@/types";
 
 describe("api", () => {
@@ -14,7 +14,10 @@ describe("api", () => {
 
       const res = await getRouteToken("asdf", "asdf2");
 
-      expect(res).toEqual({ status: "SUCCESS", token: "validToken" });
+      expect(res).toEqual({
+        status: API_RESPONSE_STATUS.SUCCESS,
+        token: "validToken",
+      });
     });
 
     describe("error states", () => {
@@ -26,7 +29,7 @@ describe("api", () => {
         const res = await getRouteToken("asdf", "asdf2");
 
         expect(res).toEqual({
-          status: "ERROR",
+          status: API_RESPONSE_STATUS.ERROR,
           errorMessage: expect.any(String),
         });
       });
@@ -46,7 +49,7 @@ describe("api", () => {
         const res = await getRouteToken("asdf", "asdf2");
 
         expect(res).toEqual({
-          status: "ERROR",
+          status: API_RESPONSE_STATUS.ERROR,
           errorMessage: expect.any(String),
         });
       });
@@ -62,7 +65,7 @@ describe("api", () => {
         const res = await getRouteToken("asdf", "asdf2");
 
         expect(res).toEqual({
-          status: "ERROR",
+          status: API_RESPONSE_STATUS.ERROR,
           errorMessage: expect.any(String),
         });
       });
@@ -97,7 +100,7 @@ describe("api", () => {
       } = resolvedData;
 
       expect(res).toEqual({
-        status: "SUCCESS",
+        status: API_RESPONSE_STATUS.SUCCESS,
         path,
         totalDistance,
         totalTime,
@@ -141,7 +144,7 @@ describe("api", () => {
         } = resolvedData;
 
         expect(res).toEqual({
-          status: "SUCCESS",
+          status: API_RESPONSE_STATUS.SUCCESS,
           path,
           totalDistance,
           totalTime,
@@ -182,7 +185,7 @@ describe("api", () => {
         const res = await getRoutePathByToken("asdf");
 
         expect(res).toEqual({
-          status: "ERROR",
+          status: API_RESPONSE_STATUS.ERROR,
           errorMessage: expect.any(String),
         });
       });
@@ -195,7 +198,7 @@ describe("api", () => {
         const res = await getRoutePathByToken("asdf");
 
         expect(res).toEqual({
-          status: "ERROR",
+          status: API_RESPONSE_STATUS.ERROR,
           errorMessage: expect.any(String),
         });
       });
@@ -215,7 +218,7 @@ describe("api", () => {
         const res = await getRoutePathByToken("asdf");
 
         expect(res).toEqual({
-          status: "ERROR",
+          status: API_RESPONSE_STATUS.ERROR,
           errorMessage: expect.any(String),
         });
       });

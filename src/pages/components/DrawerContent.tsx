@@ -1,4 +1,8 @@
-import { getRoutePathByToken, getRouteToken } from "@/utils/api";
+import {
+  API_RESPONSE_STATUS,
+  getRoutePathByToken,
+  getRouteToken,
+} from "@/utils/api";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import LocationInput from "./LocationInputs";
@@ -49,7 +53,7 @@ const DrawerContent: FC<Props> = ({
         dropoffLocation
       );
 
-      if (routeTokenResponse.status === "ERROR") {
+      if (routeTokenResponse.status === API_RESPONSE_STATUS.ERROR) {
         throw new Error(routeTokenResponse.errorMessage);
       }
 
@@ -57,7 +61,7 @@ const DrawerContent: FC<Props> = ({
 
       const routePathResponse = await getRoutePathByToken(routeToken);
 
-      if (routePathResponse.status === "ERROR") {
+      if (routePathResponse.status === API_RESPONSE_STATUS.ERROR) {
         throw new Error(routePathResponse.errorMessage);
       }
 
