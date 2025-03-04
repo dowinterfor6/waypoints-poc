@@ -26,8 +26,17 @@ const DrawerContent: FC<Props> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [startingLocation, setStartingLocation] = useState<string>("");
   const [dropoffLocation, setDropoffLocation] = useState<string>("");
+  const [inputIsRequiredError, setInputIsRequiredError] = useState<
+    [boolean, boolean]
+  >([false, false]);
 
   const onSubmit = async (): Promise<void> => {
+    if (!startingLocation || !dropoffLocation) {
+      setInputIsRequiredError([!startingLocation, !dropoffLocation]);
+
+      return;
+    }
+
     setRouteData(INITIAL_ROUTE_DATA);
     setError(null);
     setIsLoading(true);
@@ -87,6 +96,7 @@ const DrawerContent: FC<Props> = ({
     setDropoffLocation("");
     setRouteData(INITIAL_ROUTE_DATA);
     setWaypoints(null);
+    setInputIsRequiredError([false, false]);
   };
 
   const typographyVariant = isMobileViewport ? "body2" : "body1";
@@ -104,11 +114,19 @@ const DrawerContent: FC<Props> = ({
         label="Starting Location"
         value={startingLocation}
         setValue={setStartingLocation}
+        isRequiredError={inputIsRequiredError[0]}
+        clearIsRequiredError={() =>
+          setInputIsRequiredError([false, inputIsRequiredError[1]])
+        }
       />
       <LocationInput
         label="Drop-off Location"
         value={dropoffLocation}
         setValue={setDropoffLocation}
+        isRequiredError={inputIsRequiredError[1]}
+        clearIsRequiredError={() =>
+          setInputIsRequiredError([inputIsRequiredError[0], false])
+        }
       />
       <Box
         component="section"

@@ -8,9 +8,17 @@ type Props = {
   label: string;
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
+  isRequiredError: boolean;
+  clearIsRequiredError: () => void;
 };
 
-const LocationInput: FC<Props> = ({ label, value, setValue }) => {
+const LocationInput: FC<Props> = ({
+  label,
+  value,
+  setValue,
+  isRequiredError,
+  clearIsRequiredError,
+}) => {
   const [autocompleteSuggestions, setAutocompleteSuggestions] = useState<
     Array<string>
   >([]);
@@ -41,9 +49,20 @@ const LocationInput: FC<Props> = ({ label, value, setValue }) => {
       onInputChange={(_, value) => {
         setValue(value);
         debouncedFetchAutocompleteSuggestions(value);
+
+        if (isRequiredError) {
+          clearIsRequiredError();
+        }
       }}
       renderInput={(params) => (
-        <TextField {...params} label={label} variant="outlined" />
+        <TextField
+          {...params}
+          label={label}
+          variant="outlined"
+          required
+          error={isRequiredError}
+          helperText={isRequiredError ? `${label} can not be empty` : ""}
+        />
       )}
     />
   );
