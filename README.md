@@ -60,3 +60,5 @@ Otherwise, set up custom deployment via github actions like [this guide](https:/
 Use the [Google Cloud Console](https://console.cloud.google.com/google/maps-apis/quotas?project=waypoints-maps-api&api=maps-backend.googleapis.com) to manage quotas for the API
 
 Refer to the [pricing list](https://developers.google.com/maps/billing-and-pricing/pricing) for pricing
+
+`.nojekyll` tells Github Pages to not use Jekyll for the Github Actions. Jeckyll seems to ignore all files/folders with `_` underscore prefixes, causing errors in deploying NextJS projects
