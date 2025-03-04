@@ -47,7 +47,7 @@ const DrawerContent: FC<Props> = ({
 
     try {
       // In a real app, add some sort of validation to the locations to ensure
-      // it's somewhat valid before spending an API call
+      // it's somewhat valid before sending an API call
       const routeTokenResponse = await getRouteToken(
         startingLocation,
         dropoffLocation

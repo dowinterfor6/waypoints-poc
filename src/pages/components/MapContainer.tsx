@@ -1,4 +1,4 @@
-import React, { FC, useLayoutEffect, useRef } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { Coordinate } from "@/types";
 import { uniqueId } from "lodash";
 import { getRoutePolyline } from "@/utils/mapsApi";
@@ -51,7 +51,7 @@ const MapContainer: FC<Props> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (mapContainerRef.current) {
       const map = new mapsApi.Map(mapContainerRef.current, {
         zoom: 11.2,

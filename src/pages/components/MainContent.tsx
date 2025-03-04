@@ -20,6 +20,12 @@ const MainContent: FC = () => {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(true);
   const [waypoints, setWaypoints] = useState<Array<Coordinate> | null>(null);
 
+  /**
+   * Ensure all required google maps libraries are loaded before attempting
+   * to load dependent functionality. In a production app, this can be done in
+   * a context to provide components, or evaluate the existing (React) wrapper
+   * component/api packages for google maps.
+   */
   const [googleMapsLibrary, setGoogleMapsLibrary] =
     useState<google.maps.MapsLibrary | null>(null);
   const [googleMarkerLibrary, setGoogleMarkerLibrary] =
@@ -44,11 +50,15 @@ const MainContent: FC = () => {
         })(),
       ]);
 
+      // Helps with production build to ensure it's not trying to load a global
+      // variable that doesn't exist.
       setGoogleLibrary(window.google);
+
+      setIsGoogleMapsInitialized(true);
     } catch {
       console.error("Failed to initialize required google maps libraries");
-    } finally {
-      setIsGoogleMapsInitialized(true);
+      // We'll just show an infinite loader in the event of an error. Show a 
+      // descriptive error/failure page for an actual web app.
     }
   };
 

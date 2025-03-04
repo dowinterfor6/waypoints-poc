@@ -59,6 +59,10 @@ export const getAutocompleteSuggestions = async (
 
     return suggestions;
   } catch {
+    // The user probably doesn't need to know the autocomplete failed to load,
+    // console logging the error to help development
+    console.error("Failed to get autocomplete suggestions");
+
     return null;
   }
 };
