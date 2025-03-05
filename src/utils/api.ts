@@ -1,15 +1,8 @@
 import { Coordinate } from "@/types";
-import Ajv, { JSONSchemaType } from "ajv";
-
-const ajv = new Ajv();
+import { JSONSchemaType } from "ajv";
+import { isError, validateResponseWithSchema } from "./utils";
 
 const MOCK_API_BASE_URL = "https://sg-mock-api.lalamove.com";
-
-const isError = (error: unknown): error is Error =>
-  !!error &&
-  typeof error === "object" &&
-  "message" in error &&
-  typeof error.message === "string";
 
 const getErrorResponse = (
   error: unknown,
@@ -18,22 +11,6 @@ const getErrorResponse = (
   status: API_RESPONSE_STATUS.ERROR,
   errorMessage: isError(error) ? error.message : defaultErrorMessage,
 });
-
-/**
- * @throws Validation error
- */
-const validateResponseWithSchema = <T = Record<string, unknown>>(
-  schema: JSONSchemaType<T>,
-  response: Record<string, unknown>
-) => {
-  const validate = ajv.compile(schema);
-
-  const isValid = validate(response);
-
-  if (!isValid && validate.errors) {
-    throw new Error(validate.errors.map((error) => error.message).toString());
-  }
-};
 
 export enum API_RESPONSE_STATUS {
   SUCCESS = "SUCCESS",

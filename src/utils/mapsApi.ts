@@ -1,6 +1,10 @@
 import { Coordinate } from "@/types";
 import { get } from "lodash";
 
+// type GetAutocompleteSuggestionsResponse = {
+//   suggestions: Array<>
+// }
+
 export const getAutocompleteSuggestions = async (
   searchTerm: string
 ): Promise<Array<string> | null> => {

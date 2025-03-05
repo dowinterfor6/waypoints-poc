@@ -7,6 +7,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import LocationInput from "./LocationInputs";
 import { Coordinate } from "@/types";
+import { isError } from "@/utils/utils";
 
 type Props = {
   setWaypoints: Dispatch<SetStateAction<Array<Coordinate> | null>>;
@@ -78,16 +79,10 @@ const DrawerContent: FC<Props> = ({
         setIsMobileDrawerOpen(false);
       }
     } catch (error) {
-      if (
-        !!error &&
-        typeof error === "object" &&
-        "message" in error &&
-        typeof error.message === "string"
-      ) {
-        setError(error.message);
-      } else {
-        setError("Failed to fetch route data");
-      }
+      const defaultError = "Failed to fetch route data";
+
+      setError(isError(error) ? error.message : defaultError);
+
       setWaypoints(null);
     } finally {
       setIsLoading(false);
