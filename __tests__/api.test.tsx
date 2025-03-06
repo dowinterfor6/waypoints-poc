@@ -1,6 +1,10 @@
-import { describe, expect, spyOn, test } from "bun:test";
-import { API_RESPONSE_STATUS, getRoutePathByToken, getRouteToken } from "./api";
+import { describe, expect, spyOn, test, } from "bun:test";
 import { Coordinate } from "@/types";
+import {
+  API_RESPONSE_STATUS,
+  getRoutePathByToken,
+  getRouteToken,
+} from "@/utils/api";
 
 describe("api", () => {
   describe("getRouteToken", () => {

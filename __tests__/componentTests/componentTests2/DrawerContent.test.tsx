@@ -1,6 +1,6 @@
-import { describe, test, expect, mock } from "bun:test";
+import { describe, test, expect, mock, beforeAll } from "bun:test";
 import { screen, render } from "@testing-library/react";
-import DrawerContent from "./DrawerContent";
+import DrawerContent from "@/pages/components/Drawer/DrawerContent";
 import userEvent from "@testing-library/user-event";
 import DrawerContextProvider, {
   ContextValue,
@@ -9,15 +9,8 @@ import DrawerContextProvider, {
 } from "@/pages/context/DrawerContext";
 import { noop } from "lodash";
 import { getRouteToken } from "@/utils/api";
-
-mock.module("@/utils/api", () => ({
-  getRouteToken: mock(async () => noop),
-  getRoutePathByToken: mock(async () => noop),
-}));
-
-mock.module("@/utils/mapsApi", () => ({
-  getAutocompleteSuggestions: mock(async () => noop),
-}));
+import { afterAll } from "bun:test";
+import { spyOn } from "bun:test";
 
 const renderWithContext = () =>
   render(
@@ -30,10 +23,24 @@ const renderWithContext = () =>
     </DrawerContextProvider>
   );
 
-/**
- * @see LocationInput.test.tsx on why I'm not using data-testid
- */
 describe("DrawerContent", () => {
+  beforeAll(() => {
+    mock.module("@/utils/api", () => ({
+      getRouteToken: mock(async () => noop),
+      getRoutePathByToken: mock(async () => noop),
+    }));
+
+    mock.module("@/utils/mapsApi", () => ({
+      getAutocompleteSuggestions: mock(async () => noop),
+    }));
+
+    spyOn(global, "fetch").mockImplementation(async () => ({} as Response));
+  });
+
+  afterAll(() => {
+    mock.restore();
+  });
+
   test("calls on submit on valid input", async () => {
     const user = userEvent.setup();
 

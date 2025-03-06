@@ -1,15 +1,20 @@
-import { describe, test, expect, mock } from "bun:test";
+import { describe, test, expect, mock, beforeAll } from "bun:test";
 import { screen, render, waitFor } from "@testing-library/react";
-import LocationInput from "./LocationInput";
+import LocationInput from "@/pages/components/LocationInput";
 import { noop } from "lodash";
 import userEvent from "@testing-library/user-event";
 import { getAutocompleteSuggestions } from "@/utils/mapsApi";
-
-mock.module("@/utils/mapsApi", () => ({
-  getAutocompleteSuggestions: mock(noop),
-}));
+import { spyOn } from "bun:test";
 
 describe("LocationInputs", () => {
+  beforeAll(() => {
+    mock.restore();
+    mock.module("@/utils/mapsApi", () => ({
+      getAutocompleteSuggestions: mock(noop),
+    }));
+    spyOn(global, "fetch").mockImplementation(async () => ({} as Response));
+  });
+
   test("updates input field with user typed input", async () => {
     const user = userEvent.setup();
 
