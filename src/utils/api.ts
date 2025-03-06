@@ -1,6 +1,6 @@
 import { Coordinate } from "@/types";
-import { JSONSchemaType } from "ajv";
 import { isError, validateResponseWithSchema } from "./utils";
+import { getRoutePathByTokenSchema, getRouteTokenSchema } from "./schemas";
 
 const MOCK_API_BASE_URL = "https://sg-mock-api.lalamove.com";
 
@@ -28,19 +28,6 @@ export type PostRouteResponse =
       token: string;
     }
   | ErrorResponse;
-
-type GetRouteTokenResponse = {
-  token: string;
-};
-
-const getRouteTokenSchema: JSONSchemaType<GetRouteTokenResponse> = {
-  type: "object",
-  properties: {
-    token: { type: "string" },
-  },
-  required: ["token"],
-  additionalProperties: false,
-};
 
 export const getRouteToken = async (
   origin: string,
@@ -81,34 +68,6 @@ export type GetRouteResponse =
       totalTime: number;
     }
   | ErrorResponse;
-
-type GetRoutePathByTokenResponse = {
-  status: string;
-  path: Array<Coordinate>;
-  total_distance: number;
-  total_time: number;
-};
-
-const getRoutePathByTokenSchema: JSONSchemaType<GetRoutePathByTokenResponse> = {
-  type: "object",
-  properties: {
-    status: { type: "string" },
-    path: {
-      type: "array",
-      items: {
-        type: "array",
-        items: [{ type: "string" }, { type: "string" }],
-        minItems: 2,
-        maxItems: 2,
-      },
-      minItems: 1,
-    },
-    total_distance: { type: "number" },
-    total_time: { type: "number" },
-  },
-  required: ["status", "path", "total_distance", "total_time"],
-  additionalProperties: false,
-};
 
 export const getRoutePathByToken = async (
   token: string

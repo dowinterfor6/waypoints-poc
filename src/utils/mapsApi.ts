@@ -1,9 +1,10 @@
 import { Coordinate } from "@/types";
 import { get } from "lodash";
-
-// type GetAutocompleteSuggestionsResponse = {
-//   suggestions: Array<>
-// }
+import { isError, validateResponseWithSchema } from "./utils";
+import {
+  getAutocompleteSuggestionsSchema,
+  getRoutePolylineSchema,
+} from "./schemas";
 
 export const getAutocompleteSuggestions = async (
   searchTerm: string
@@ -47,9 +48,7 @@ export const getAutocompleteSuggestions = async (
 
     const json = await res.json();
 
-    if (!("suggestions" in json) || !Array.isArray(json.suggestions)) {
-      throw new Error("Unexpected response shape");
-    }
+    validateResponseWithSchema(getAutocompleteSuggestionsSchema, json);
 
     const placePredictionSuggestions: Array<{
       placePrediction: { text: { text: string } };
@@ -62,10 +61,13 @@ export const getAutocompleteSuggestions = async (
     );
 
     return suggestions;
-  } catch {
+  } catch (error) {
+    const errorMessage = "Failed to get autocomplete suggestions";
+
+    // This is a bonus feature, not the MVP
     // The user probably doesn't need to know the autocomplete failed to load,
     // console logging the error to help development
-    console.error("Failed to get autocomplete suggestions");
+    console.error(isError(error) ? error.message : errorMessage);
 
     return null;
   }
@@ -121,13 +123,7 @@ export const getRoutePolyline = async (
 
     const json = await res.json();
 
-    if (
-      !("routes" in json) ||
-      !Array.isArray(json.routes) ||
-      json.routes.length === 0
-    ) {
-      throw new Error("Unexpected response shape");
-    }
+    validateResponseWithSchema(getRoutePolylineSchema, json);
 
     const routePolyline = get(json.routes[0], "polyline.encodedPolyline");
 
@@ -137,7 +133,10 @@ export const getRoutePolyline = async (
 
     return routePolyline;
   } catch (error) {
-    console.error("Failed to get route polyline: ", error);
+    const errorMessage = "Failed to get route polyline";
+
+    // This is a bonus feature, not the MVP
+    console.error(isError(error) ? error.message : errorMessage);
 
     return null;
   }
