@@ -86,6 +86,7 @@ const LocationInput: FC<Props> = ({
       }}
       renderInput={(params) => (
         <TextField
+          data-testid="locationInputTextField"
           {...params}
           label={label}
           variant="outlined"

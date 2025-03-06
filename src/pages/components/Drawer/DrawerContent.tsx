@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React, { FC, useContext } from "react";
-import LocationInput from "../LocationInputs";
+import LocationInput from "../LocationInput";
 import InfoSection from "./InfoSection";
 import ButtonGroup from "./ButtonGroup";
 import { DrawerContext } from "@/pages/context/DrawerContext";

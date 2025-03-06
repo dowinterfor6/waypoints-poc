@@ -23,7 +23,7 @@ export type RouteData = {
 
 export type DrawerError = string | null;
 
-type ContextValue = {
+export type ContextValue = {
   setWaypoints: Dispatch<SetStateAction<Array<Coordinate> | null>>;
   isMobileViewport: boolean;
   setIsMobileDrawerOpen: Dispatch<SetStateAction<boolean>>;
@@ -40,7 +40,7 @@ type ContextValue = {
   onReset: () => void;
 };
 
-const defaultContextValue: ContextValue = {
+export const defaultContextValue: ContextValue = {
   setWaypoints: noop,
   isMobileViewport: false,
   setIsMobileDrawerOpen: noop,

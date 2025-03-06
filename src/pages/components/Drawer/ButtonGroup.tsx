@@ -13,10 +13,20 @@ const ButtonGroup: FC = () => {
       >
         {/* The UX on this is subjective, but for a simple experience disallowed
     actions while loading will just be disabled */}
-        <Button variant="contained" onClick={onSubmit} loading={isLoading}>
+        <Button
+          variant="contained"
+          onClick={onSubmit}
+          loading={isLoading}
+          data-testid="submitButton"
+        >
           Submit
         </Button>
-        <Button variant="contained" onClick={onReset} disabled={isLoading}>
+        <Button
+          variant="contained"
+          onClick={onReset}
+          disabled={isLoading}
+          data-testid="resetButton"
+        >
           Reset
         </Button>
       </Stack>
