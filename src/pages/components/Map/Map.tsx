@@ -1,15 +1,9 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useContext, useEffect, useRef } from "react";
 import { Coordinate } from "@/types";
 import { uniqueId } from "lodash";
 import { getRoutePolyline } from "@/utils/mapsApi";
 import polyline from "@mapbox/polyline";
-
-type Props = {
-  googleLibrary: typeof google;
-  mapsApi: google.maps.MapsLibrary;
-  markerApi: google.maps.MarkerLibrary;
-  waypoints: Array<Coordinate> | null;
-};
+import { GoogleMapsApiContext } from "../../context/GoogleMapsApiContext";
 
 const setRoutePolyline = async (
   googleLibrary: typeof google,
@@ -43,17 +37,20 @@ const setRoutePolyline = async (
   }
 };
 
-const MapContainer: FC<Props> = ({
-  googleLibrary,
-  mapsApi,
-  markerApi,
-  waypoints,
-}) => {
+const Map: FC = () => {
+  const {
+    googleLibrary,
+    mapsLibrary,
+    markerLibrary,
+    waypoints,
+    isFullyInitialized,
+  } = useContext(GoogleMapsApiContext);
+
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (mapContainerRef.current) {
-      const map = new mapsApi.Map(mapContainerRef.current, {
+    if (mapContainerRef.current && isFullyInitialized) {
+      const map = new mapsLibrary.Map(mapContainerRef.current, {
         zoom: 11.2,
         center: { lat: 22.302711, lng: 114.177216 },
         mapTypeId: "roadmap",
@@ -65,7 +62,7 @@ const MapContainer: FC<Props> = ({
         const markerBounds = new googleLibrary.maps.LatLngBounds();
 
         waypoints.forEach(([lat, lng], idx) => {
-          const pinTextGlyph = new markerApi.PinElement({
+          const pinTextGlyph = new markerLibrary.PinElement({
             glyph: `${idx + 1}`,
             glyphColor: "white",
           });
@@ -75,7 +72,7 @@ const MapContainer: FC<Props> = ({
             Number(lng)
           );
 
-          new markerApi.AdvancedMarkerElement({
+          new markerLibrary.AdvancedMarkerElement({
             map,
             position,
             content: pinTextGlyph.element,
@@ -92,9 +89,9 @@ const MapContainer: FC<Props> = ({
   }, [
     googleLibrary,
     waypoints,
-    mapsApi.Map,
-    markerApi.AdvancedMarkerElement,
-    markerApi.PinElement,
+    isFullyInitialized,
+    mapsLibrary,
+    markerLibrary,
   ]);
 
   return (
@@ -106,4 +103,4 @@ const MapContainer: FC<Props> = ({
   );
 };
 
-export default MapContainer;
+export default Map;
