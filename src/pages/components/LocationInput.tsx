@@ -75,10 +75,10 @@ const LocationInput: FC<Props> = ({
       options={autocompleteSuggestions}
       clearIcon={<Clear />}
       inputValue={value}
-      onInputChange={(_, value) => {
-        setValue(value);
+      onInputChange={(_, newValue) => {
+        setValue(newValue);
 
-        usedCallbackDebouncedFetchAutocompleteSuggestions(value);
+        usedCallbackDebouncedFetchAutocompleteSuggestions(newValue);
 
         if (isRequiredError) {
           clearIsRequiredError();
