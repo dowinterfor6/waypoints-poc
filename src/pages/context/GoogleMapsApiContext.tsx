@@ -110,7 +110,8 @@ const GoogleMapsApiProvider: FC<Props> = ({ waypoints, children }) => {
     loadMapsLibraries(loader);
   }, []);
 
-  // Memoized so that the object reference doesn't change for each rerender
+  // Memoized so that the object reference doesn't change each time this is
+  // rerendered, causing a full update for all descendent children
   const contextValue: ContextValue = useMemo(() => {
     const isFullyInitialized =
       isInitialized && !!googleLibrary && !!mapsLibrary && !!markerLibrary;

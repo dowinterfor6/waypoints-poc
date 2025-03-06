@@ -7,10 +7,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { MenuOpenOutlined, MenuOutlined } from "@mui/icons-material";
-import DrawerContent from "./DrawerContent";
+import DrawerContent from "./Drawer/DrawerContent";
 import MapContainer from "./Map/MapContainer";
 import { Coordinate } from "@/types";
 import GoogleMapsApiProvider from "../context/GoogleMapsApiContext";
+import DrawerContextProvider from "../context/DrawerContext";
 
 const MainContent: FC = () => {
   const theme = useTheme();
@@ -58,11 +59,13 @@ const MainContent: FC = () => {
         }}
         variant={isMobileViewport ? "temporary" : "persistent"}
       >
-        <DrawerContent
+        <DrawerContextProvider
           setWaypoints={setWaypoints}
           isMobileViewport={isMobileViewport}
           setIsMobileDrawerOpen={setIsMobileDrawerOpen}
-        />
+        >
+          <DrawerContent />
+        </DrawerContextProvider>
       </Drawer>
       <Box
         component="section"

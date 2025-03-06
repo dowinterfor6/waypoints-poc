@@ -95,6 +95,15 @@ export const getRoutePathByToken = async (
       return await getRoutePathByToken(token);
     }
 
+    if (
+      "status" in json &&
+      json.status === "failure" &&
+      "error" in json &&
+      typeof json.error === "string"
+    ) {
+      throw new Error(json.error);
+    }
+
     validateResponseWithSchema(getRoutePathByTokenSchema, json);
 
     const { path, total_distance: totalDistance, total_time: totalTime } = json;
