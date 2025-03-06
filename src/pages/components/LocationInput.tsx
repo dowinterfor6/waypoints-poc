@@ -50,7 +50,7 @@ const LocationInput: FC<Props> = ({
         const autoCompleteSuggestions = await getAutocompleteSuggestions(value);
 
         setAutocompleteSuggestions(autoCompleteSuggestions ?? []);
-      }, 400),
+      }, 750),
     [setAutocompleteSuggestions]
   );
 
