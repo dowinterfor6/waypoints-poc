@@ -40,7 +40,7 @@ At the root of the project, simply run:
 bun test
 ```
 
-This is incredibly inconvenient but Bun's `mock.restore` doesn't seem to be working, [stack overflow thread](https://github.com/oven-sh/bun/issues/7823) for reference.
+This is incredibly inconvenient but Bun's `mock.restore` doesn't seem to be working, [stack overflow thread](https://github.com/oven-sh/bun/issues/7823) for reference. This is why I have the very weird folder structure in `__tests__` to ensure that the mocks do not conflict with each other even when they can't be restored properly.
 
 Also, NextJS doesn't like (component) test files outside of `__tests__` folder, or rather, doesn't like them inside `pages`, so I moved them all to `__tests__`.
 
